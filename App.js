@@ -1,40 +1,174 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState} from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
+  const player1 = "x"
+  const player2 = "o"
+  const [playTime, setPlayTime] = useState(player1)
+  const [gameOver, setGameOver] = useState(false)
+
   const board = [
     ['', '', '', '', '', '', ''],
     ['', '', '', '', '', '', ''],
-    ['x', '', '', '', '', '', ''],
-    ['o', 'x', 'o', '', '', '', ''],
-    ['o', 'o', 'x', 'o', '', '', ''],
-    ['x', 'x', 'x', 'x', 'o', '', '']
+    ['', '', '', 'o', '', '', ''],
+    ['x', '', 'o', 'x', '', '', ''],
+    ['x', 'o', 'x', 'o', 'o', '', ''],
+    ['o', 'o', 'x', 'x', 'x', '', '']
   ]
 
-  const search = () => {
-    var win = ''
+  const verifyWinner = () => {
+    var winner = ''
+    var linePlayer1 = []
+    var columnPlayer1 = []
+    var linePlayer2 = []
+    var columnPlayer2 = []
+
     board.map((lines, lineIndex) => {
       lines.map((columns, columnIndex) => {
-        if (columns === 'x') {
-          // console.log(lineIndex, columnIndex)
-          win = verify(lineIndex, columnIndex, 'x')
+        if (columns === player1) {
+          linePlayer1.push(lineIndex)
+          columnPlayer1.push(columnIndex)
+        } else if (columns === player2) {
+          linePlayer2.push(lineIndex)
+          columnPlayer2.push(columnIndex)
         }
       })
     })
 
-    if (win != '') {
-      Alert.alert('Victory!', `GG izi! ${win} é o campeão!`)
+    //horizontal
+    const horizontalPlayer1 = verify(linePlayer1, columnPlayer1, 'hv')
+    const horizontalPlayer2 = verify(linePlayer2, columnPlayer2, 'hv')
+    // console.log(horizontalPlayer1, horizontalPlayer2)
+
+    //vertical
+    const verticalPlayer1 = verify(columnPlayer1, linePlayer1, 'hv')
+    const verticalPlayer2 = verify(columnPlayer2, linePlayer2, 'hv')
+    // console.log(verticalPlayer1, verticalPlayer2)
+
+    //diagonal direita
+    const rightDiagonalPlayer1 = verify(linePlayer1, columnPlayer1, 'rd')
+    const rightDiagonalPlayer2 = verify(linePlayer2, columnPlayer2, 'rd')
+    console.log(rightDiagonalPlayer1, rightDiagonalPlayer2)
+
+    //diagonal esquerda
+    const leftDiagonalPlayer1 = verify(linePlayer1, columnPlayer1, 'ld')
+    const leftDiagonalPlayer2 = verify(linePlayer2, columnPlayer2, 'ld')
+    console.log(leftDiagonalPlayer1, leftDiagonalPlayer2)
+
+    if (horizontalPlayer1 >= 5 || verticalPlayer1 >= 5 || rightDiagonalPlayer1 >= 5 || leftDiagonalPlayer1 >= 5) {
+      winner = player1
+    } else if (horizontalPlayer2 >= 5 || verticalPlayer2 >= 5 || rightDiagonalPlayer2 >= 5 || leftDiagonalPlayer2 >= 5) {
+      winner = player2
     }
+
+    if (winner != '') {
+      setGameOver(true)
+      Alert.alert('Victory!', `GG izi! ${winner} é o campeão!`)
+    }
+
   }
 
-  const verify = (line, column, player) => {
-    return player
+  const verify = (mainAxis, auxAxis, direction) => {
+    var qt = 1
+
+    for(var i = 0; i < mainAxis.length; i++) {
+      //horizontal and vertical
+      if (direction === 'hv') {
+        if(qt < 4) {
+          if ((mainAxis[i] == mainAxis[i+1]) && (auxAxis[i+1] == auxAxis[i] + 1)){
+            qt++
+          } else {
+            qt = 1
+          }
+        } else if(qt == 4) {
+          if ((mainAxis[i] == mainAxis[i-1]) && (auxAxis[i-1] == auxAxis[i] - 1)){
+            qt++
+          } else {
+            qt = 1
+          }
+        } else {
+          return qt
+        }
+      }
+
+      //diagonal direita
+      // else if (direction === 'rd') {
+      //   var last = 0
+      //   if(qt < 4) {
+      //     if ((mainAxis[i] == mainAxis[i+1] - 1) && (auxAxis[i] == mainAxis[i+1] - 1)){
+      //       console.log(mainAxis[i], mainAxis[i+1], qt)
+      //       last = i
+      //       qt++
+      //     } else if ((mainAxis[i] == mainAxis[last] + 1) && (auxAxis[i] == mainAxis[last] + 1)){
+      //       console.log(mainAxis[i], mainAxis[i+1], qt)
+      //       last = i
+      //       qt++
+      //     }
+      //   } else if(qt == 4) {
+      //     if ((mainAxis[i] == mainAxis[i-1] + 1) && (auxAxis[i] == mainAxis[i-1] + 1)){
+      //       console.log(mainAxis[i], mainAxis[i+1], qt)
+      //       last = i
+      //       qt++
+      //     } else if ((mainAxis[i] == mainAxis[last] - 1) && (auxAxis[i] == mainAxis[last] - 1)){
+      //       console.log(mainAxis[i], mainAxis[i+1], qt)
+      //       last = i
+      //       qt++
+      //     }
+      //   } else {
+      //     return qt
+      //   }
+      // }
+
+      //diagonal esquerda
+      // else if (direction === 'ld') {
+
+      // }
+    }
+    return qt
   }
+
+  // const updateDisplay = () => {
+  //   if (gameOver) {
+  //     return
+  //   }
+    
+  //   if (playTime == player1) {
+  //     var player = document.querySelectorAll("div#id_div img")[0]
+  //     player.setAttribute("src", "caminho_img_player1")
+  //   } else {
+  //     var player = document.querySelectorAll("div#id_div img")[0]
+  //     player.setAttribute("src", "caminho_img_player2")
+  //   }
+  // }
+
+  // const initializeSpaces = () => {
+  //   var spaces = document.getElementsByClassName("nome_classe_espacos")
+
+  //   for (var i = 0; i < spaces.length; i ++) {
+  //     spaces[i].addEventListener("click", function() {
+  //       if (gameOver) {
+  //         return
+  //       }
+
+  //       if (playTime == player1) {
+  //         this.innerHTML = "<img src='caminho_img_player1'"
+  //         this.setAttribute("nome_atributo_valor_espaco", player1)
+  //         setPlayTime(player2)
+  //       } else {
+  //         this.innerHtml = "<img src='caminho_img_player2'"
+  //         this.setAttribute("nome_atributo_valor_espaco", player2)
+  //         setPlayTime(player1)
+  //       }
+  //       updateDisplay()
+  //       verifyWinner()
+  //     })
+  //   }
+  // }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={search} style={styles.button}>
+      <TouchableOpacity onPress={verifyWinner} style={styles.button}>
         <Text>
           Iniciar
         </Text>
