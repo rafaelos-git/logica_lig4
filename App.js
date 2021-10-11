@@ -9,12 +9,12 @@ export default function App() {
   const [gameOver, setGameOver] = useState(false)
 
   const board = [
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-    ['', '', '', 'o', '', '', ''],
-    ['x', '', 'o', 'x', '', '', ''],
-    ['x', 'o', 'x', 'o', 'o', '', ''],
-    ['o', 'o', 'x', 'x', 'x', '', '']
+    ['o', '', '', '', '', '', ''],
+    ['x', 'o', 'o', '', '', '', 'o'],
+    ['x', 'x', 'o', 'o', '', 'o', ''],
+    ['x', 'x', 'x', '', 'o', '', ''],
+    ['x', 'x', '', '', 'o', '', ''],
+    ['', '', 'x', '', '', '', '']
   ]
 
   const verifyWinner = () => {
@@ -56,9 +56,9 @@ export default function App() {
     const leftDiagonalPlayer2 = verify(linePlayer2, columnPlayer2, 'ld')
     console.log(leftDiagonalPlayer1, leftDiagonalPlayer2)
 
-    if (horizontalPlayer1 >= 5 || verticalPlayer1 >= 5 || rightDiagonalPlayer1 >= 5 || leftDiagonalPlayer1 >= 5) {
+    if (horizontalPlayer1 >= 4 || verticalPlayer1 >= 4 || rightDiagonalPlayer1 >= 4 || leftDiagonalPlayer1 >= 4) {
       winner = player1
-    } else if (horizontalPlayer2 >= 5 || verticalPlayer2 >= 5 || rightDiagonalPlayer2 >= 5 || leftDiagonalPlayer2 >= 5) {
+    } else if (horizontalPlayer2 >= 4 || verticalPlayer2 >= 4 || rightDiagonalPlayer2 >= 4 || leftDiagonalPlayer2 >= 4) {
       winner = player2
     }
 
@@ -70,60 +70,90 @@ export default function App() {
   }
 
   const verify = (mainAxis, auxAxis, direction) => {
+    console.log('--------------------------------------------------------')
     var qt = 1
+    var last = 0
 
     for(var i = 0; i < mainAxis.length; i++) {
       //horizontal and vertical
       if (direction === 'hv') {
-        if(qt < 4) {
-          if ((mainAxis[i] == mainAxis[i+1]) && (auxAxis[i+1] == auxAxis[i] + 1)){
-            qt++
+        last = i
+        for(var j = 0; j < mainAxis.length; j++) {
+          if (qt < 4) {
+            // console.log(mainAxis[j], auxAxis[j], 'i')
+            // console.log(mainAxis[last] + 1, auxAxis[last], 'last')
+            // console.log(last, 'last')
+            // console.log(j, 'j')
+            if ((mainAxis[j] == mainAxis[last] + 1) && (auxAxis[j] == auxAxis[last])) {
+              last = j
+              qt++
+            }
+            // console.log(last, 'last novo')
+            // console.log(qt, 'qt')
           } else {
-            qt = 1
+            return qt
           }
-        } else if(qt == 4) {
-          if ((mainAxis[i] == mainAxis[i-1]) && (auxAxis[i-1] == auxAxis[i] - 1)){
-            qt++
-          } else {
-            qt = 1
-          }
+        }
+        if (qt < 4) {
+          qt = 1
         } else {
           return qt
         }
       }
 
       //diagonal direita
-      // else if (direction === 'rd') {
-      //   var last = 0
-      //   if(qt < 4) {
-      //     if ((mainAxis[i] == mainAxis[i+1] - 1) && (auxAxis[i] == mainAxis[i+1] - 1)){
-      //       console.log(mainAxis[i], mainAxis[i+1], qt)
-      //       last = i
-      //       qt++
-      //     } else if ((mainAxis[i] == mainAxis[last] + 1) && (auxAxis[i] == mainAxis[last] + 1)){
-      //       console.log(mainAxis[i], mainAxis[i+1], qt)
-      //       last = i
-      //       qt++
-      //     }
-      //   } else if(qt == 4) {
-      //     if ((mainAxis[i] == mainAxis[i-1] + 1) && (auxAxis[i] == mainAxis[i-1] + 1)){
-      //       console.log(mainAxis[i], mainAxis[i+1], qt)
-      //       last = i
-      //       qt++
-      //     } else if ((mainAxis[i] == mainAxis[last] - 1) && (auxAxis[i] == mainAxis[last] - 1)){
-      //       console.log(mainAxis[i], mainAxis[i+1], qt)
-      //       last = i
-      //       qt++
-      //     }
-      //   } else {
-      //     return qt
-      //   }
-      // }
+      else if (direction === 'rd') {
+        console.log('****************************************************************')
+        last = i
+        for(var j = 0; j < mainAxis.length; j++) {
+          if(qt < 4) {
+            // console.log(mainAxis[j], auxAxis[j], 'i')
+            // console.log(mainAxis[last] + 1, auxAxis[last] - 1, 'last')
+            // console.log(last, 'last')
+            // console.log(j, 'j')
+            
+            if ((mainAxis[j] == mainAxis[last] + 1) && (auxAxis[j] == auxAxis[last] - 1)){
+              console.log('passei aqui')
+              last = j
+              qt++
+            }
+            // console.log(last, 'last novo')
+            // console.log(qt, 'qt')
+          } else {
+            return qt
+          }
+        }
+        qt = 1
+      }
 
       //diagonal esquerda
-      // else if (direction === 'ld') {
-
-      // }
+      else if (direction === 'ld') {
+        console.log('****************************************************************')
+        last = i
+        for(var j = 0; j < mainAxis.length; j++) {
+          if(qt < 4) {
+            // console.log(mainAxis[j], auxAxis[j], 'i')
+            // console.log(mainAxis[last] + 1, auxAxis[last] - 1, 'last')
+            // console.log(last, 'last')
+            // console.log(j, 'j')
+            
+            if ((mainAxis[j] == mainAxis[last] + 1) && (auxAxis[j] == auxAxis[last] + 1)){
+              console.log('passei aqui')
+              last = j
+              qt++
+            }
+            // console.log(last, 'last novo')
+            // console.log(qt, 'qt')
+          } else {
+            return qt
+          }
+        }
+        if (qt < 4) {
+          qt = 1
+        } else {
+          return qt
+        }
+      }
     }
     return qt
   }
