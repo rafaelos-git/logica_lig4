@@ -5,8 +5,8 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function App() {
   const player1 = "x"
   const player2 = "o"
-  const [playTime, setPlayTime] = useState(player1)
   const [gameOver, setGameOver] = useState(false)
+  // const [playTime, setPlayTime] = useState(player1)
 
   const board = [
     ['o', '', '', '', '', '', ''],
@@ -107,18 +107,11 @@ export default function App() {
         last = i
         for(var j = 0; j < mainAxis.length; j++) {
           if(qt < 4) {
-            // console.log(mainAxis[j], auxAxis[j], 'i')
-            // console.log(mainAxis[last] + 1, auxAxis[last] - 1, 'last')
-            // console.log(last, 'last')
-            // console.log(j, 'j')
-            
             if ((mainAxis[j] == mainAxis[last] + 1) && (auxAxis[j] == auxAxis[last] - 1)){
               console.log('passei aqui')
               last = j
               qt++
             }
-            // console.log(last, 'last novo')
-            // console.log(qt, 'qt')
           } else {
             return qt
           }
@@ -132,18 +125,11 @@ export default function App() {
         last = i
         for(var j = 0; j < mainAxis.length; j++) {
           if(qt < 4) {
-            // console.log(mainAxis[j], auxAxis[j], 'i')
-            // console.log(mainAxis[last] + 1, auxAxis[last] - 1, 'last')
-            // console.log(last, 'last')
-            // console.log(j, 'j')
-            
             if ((mainAxis[j] == mainAxis[last] + 1) && (auxAxis[j] == auxAxis[last] + 1)){
               console.log('passei aqui')
               last = j
               qt++
             }
-            // console.log(last, 'last novo')
-            // console.log(qt, 'qt')
           } else {
             return qt
           }
